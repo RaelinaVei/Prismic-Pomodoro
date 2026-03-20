@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS: PomodoroSettings = {
   sessionsBeforeLongBreak: 4,
 };
 
-export function usePomodoro() {
+export function usePomodoro(onSessionComplete?: (focusMinutes: number) => void) {
   const [settings, setSettings] = useState<PomodoroSettings>(() => {
     const saved = localStorage.getItem("pomodoro-settings");
     return saved ? JSON.parse(saved) : DEFAULT_SETTINGS;
@@ -27,6 +27,8 @@ export function usePomodoro() {
   const [isRunning, setIsRunning] = useState(false);
   const [completedSessions, setCompletedSessions] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const onSessionCompleteRef = useRef(onSessionComplete);
+  onSessionCompleteRef.current = onSessionComplete;
 
   const getTimeForMode = useCallback(
     (m: TimerMode) => {
@@ -49,10 +51,10 @@ export function usePomodoro() {
         setTimeLeft((prev) => {
           if (prev <= 1) {
             setIsRunning(false);
-            // Auto advance
             if (mode === "pomodoro") {
               const newCompleted = completedSessions + 1;
               setCompletedSessions(newCompleted);
+              onSessionCompleteRef.current?.(settings.focusTime);
               if (newCompleted % settings.sessionsBeforeLongBreak === 0) {
                 setMode("longBreak");
                 return settings.longBreakTime * 60;
@@ -94,7 +96,6 @@ export function usePomodoro() {
     (newSettings: PomodoroSettings) => {
       setSettings(newSettings);
       setIsRunning(false);
-      // Reset time for current mode with new settings
       switch (mode) {
         case "pomodoro": setTimeLeft(newSettings.focusTime * 60); break;
         case "shortBreak": setTimeLeft(newSettings.shortBreakTime * 60); break;
