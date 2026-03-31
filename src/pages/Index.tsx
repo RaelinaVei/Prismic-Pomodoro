@@ -111,7 +111,7 @@ const Index = () => {
           {user ? (
             <div className="flex items-center gap-3">
               <span className="timer-text text-sm font-body opacity-80 hidden sm:block">
-                {user.email}
+                {user.user_metadata?.display_name || user.email?.split("@")[0] || "Student"}
               </span>
               <button
                 onClick={() => signOut()}

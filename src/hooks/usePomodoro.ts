@@ -95,14 +95,19 @@ export function usePomodoro(onSessionComplete?: (focusMinutes: number) => void) 
               const newCompleted = completedSessions + 1;
               setCompletedSessions(newCompleted);
               onSessionCompleteRef.current?.(settings.focusTime);
+              playNotificationSound("break");
               if (newCompleted % settings.sessionsBeforeLongBreak === 0) {
+                showNotification("🎉 Time for a long break!", `Great job! You completed ${newCompleted} sessions. Take a ${settings.longBreakTime} min break.`);
                 setMode("longBreak");
                 return settings.longBreakTime * 60;
               } else {
+                showNotification("☕ Break time!", `Session complete! Take a ${settings.shortBreakTime} min break.`);
                 setMode("shortBreak");
                 return settings.shortBreakTime * 60;
               }
             } else {
+              playNotificationSound("focus");
+              showNotification("📚 Focus time!", "Break's over — let's get back to work!");
               setMode("pomodoro");
               return settings.focusTime * 60;
             }
