@@ -1,5 +1,45 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
+const playNotificationSound = (type: "focus" | "break") => {
+  try {
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    if (type === "break") {
+      // Gentle chime for break
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.15); // E5
+      osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.3); // G5
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.6);
+    } else {
+      // Upbeat tone for focus
+      osc.frequency.setValueAtTime(783.99, ctx.currentTime); // G5
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.15); // E5
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime + 0.3); // C5
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.6);
+    }
+  } catch (e) {
+    // Audio not available
+  }
+};
+
+const showNotification = (title: string, body: string) => {
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification(title, { body, icon: "/favicon.ico" });
+  } else if ("Notification" in window && Notification.permission !== "denied") {
+    Notification.requestPermission();
+  }
+};
+
 export type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
 
 export interface PomodoroSettings {
