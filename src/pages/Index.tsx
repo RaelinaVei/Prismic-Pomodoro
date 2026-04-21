@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { Maximize2, LogIn, LogOut, User } from "lucide-react";
+import { Maximize2, LogIn, LogOut, User, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { usePomodoro } from "@/hooks/usePomodoro";
 import { useTheme } from "@/hooks/useTheme";
 import { useStudyStats, StudyStatsWidget } from "@/components/StudyStats";
