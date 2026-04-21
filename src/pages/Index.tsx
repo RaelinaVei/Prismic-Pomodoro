@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { Maximize2, LogIn, LogOut, User, ArrowLeft } from "lucide-react";
+import { Maximize2, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePomodoro } from "@/hooks/usePomodoro";
 import { useTheme } from "@/hooks/useTheme";
@@ -16,16 +16,14 @@ import { SessionCounter } from "@/components/SessionCounter";
 import { MotivationalQuote } from "@/components/MotivationalQuote";
 import { QuickNotes } from "@/components/QuickNotes";
 import { SpotifyEmbed } from "@/components/SpotifyEmbed";
-import { AuthModal } from "@/components/AuthModal";
 
 const Index = () => {
-  const { user, signOut, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { stats, recordSession, setStats } = useStudyStats();
   const pomodoro = usePomodoro(recordSession);
   const themeCtx = useTheme();
   const cloudSync = useCloudSync();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
   const initialLoadDone = useRef(false);
 
   // Load cloud data on login
@@ -253,9 +251,6 @@ const Index = () => {
         onCustomUpload={themeCtx.handleCustomUpload}
         onClearCustomBg={themeCtx.clearCustomBg}
       />
-
-      {/* Auth modal */}
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </div>
   );
 };
