@@ -42,6 +42,7 @@ const Stopwatch = () => {
   }, [running]);
 
   const reset = () => {
+    if (elapsed > 0) recordPartial(Math.floor(elapsed / 1000));
     setRunning(false);
     accRef.current = 0;
     setElapsed(0);
