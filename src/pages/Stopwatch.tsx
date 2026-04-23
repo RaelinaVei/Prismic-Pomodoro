@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Play, Pause, RotateCcw, Flag } from "lucide-react";
 import { LiveBackground } from "@/components/LiveBackground";
 import { FullscreenButton } from "@/components/FullscreenButton";
+import { recordPartial } from "@/lib/studyTracker";
 
 const pad = (n: number, w = 2) => Math.floor(n).toString().padStart(w, "0");
 
@@ -41,6 +42,7 @@ const Stopwatch = () => {
   }, [running]);
 
   const reset = () => {
+    if (elapsed > 0) recordPartial(Math.floor(elapsed / 1000));
     setRunning(false);
     accRef.current = 0;
     setElapsed(0);
