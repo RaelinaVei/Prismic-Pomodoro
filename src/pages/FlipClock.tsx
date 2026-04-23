@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Moon, Sun, Palette, Clock as ClockIcon, Hourglass, Play, Pause, RotateCcw } from "lucide-react";
 import { FlipDigit } from "@/components/FlipDigit";
 import { FullscreenButton } from "@/components/FullscreenButton";
-import { recordStudy } from "@/lib/studyTracker";
+import { recordStudy, recordPartial } from "@/lib/studyTracker";
 
 const pad = (n: number) => Math.max(0, Math.floor(n)).toString().padStart(2, "0");
 
